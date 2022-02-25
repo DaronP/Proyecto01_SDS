@@ -1,5 +1,7 @@
 from operator import concat
 from tkinter import EXCEPTION
+from cv2 import correctMatches
+from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
 import sklearn
@@ -10,7 +12,7 @@ import re
 import contractions
 from gensim.parsing.preprocessing import remove_stopwords
 from sklearn.feature_extraction.text import CountVectorizer
-
+import seaborn as sb
 
 descartar = ['biflow_direction',
 'direction',
@@ -35,7 +37,9 @@ descartar = ['biflow_direction',
 'retransmitted_out_pkts',
 'src_tos',
 'dst_tos',
-'sampling_interval']
+'sampling_interval',
+'protocol',
+'l4_dst_port']
 
 for i in range(len(descartar)):
     descartar[i] = descartar[i].upper()
@@ -44,6 +48,12 @@ descartar.append('Unnamed: 0')
 descartar.append('Unnamed: 0.1')
 
 df = pd.read_csv('dataframe_spl.csv')
+
+'''corr_df = df.corr(method='pearson')
+print(corr_df)
+sb.heatmap(corr_df, annot=True)
+plt.show()'''
+
 #print(df.head())
 df = df.drop(descartar, axis=1)
 
@@ -78,7 +88,17 @@ for i in range(len(byts)):
 for i in range(len(byts)):
     byts[i] = int(byts[i])
 
+
+
+
+
 df['DST_TO_SRC_SECOND_BYTES'] = byts
+
+
+corr_df = df.corr(method='pearson')
+sb.heatmap(corr_df, annot=True)
+plt.show()
+
 
 df.to_csv('df_prep.csv')
 #print(df.head())
