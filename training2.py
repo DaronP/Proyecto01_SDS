@@ -26,10 +26,10 @@ print('Final features: ', final_features)
 feature_matrix_train, feature_matrix_test, target_train, target_test = model_selection.train_test_split(features, target, test_size=0.30, random_state=32)
 
 
-clf = tree.DecisionTreeClassifier()
+clf = MultinomialNB()
 clf = clf.fit(feature_matrix_train, target_train)
 
-clf_pkl_model = open('model_desicion_tree.pkl', 'wb')
+clf_pkl_model = open('model_naive_bayes.pkl', 'wb')
 pickle.dump(clf, clf_pkl_model)
 clf_pkl_model.close()
 

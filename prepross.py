@@ -4,20 +4,11 @@ from cv2 import correctMatches
 from matplotlib import pyplot as plt
 import pandas as pd
 import numpy as np
-import sklearn
-from sklearn.feature_extraction.text import TfidfVectorizer
-import pickle
-import unicodedata
-import re
-import contractions
-from gensim.parsing.preprocessing import remove_stopwords
-from sklearn.feature_extraction.text import CountVectorizer
 import seaborn as sb
 
 descartar = ['biflow_direction',
 'direction',
 'firewall_event',
-'first_switched',
 'flow_active_timeout',
 'flow_end_milliseconds',
 'flow_end_sec',
@@ -26,7 +17,6 @@ descartar = ['biflow_direction',
 'flow_start_milliseconds',
 'flow_start_sec',
 'frame_length',
-'last_switched',
 'max_ip_pkt_len',
 'min_ip_pkt_len',
 'ooorder_in_pkts',
@@ -38,20 +28,16 @@ descartar = ['biflow_direction',
 'src_tos',
 'dst_tos',
 'sampling_interval',
-'protocol',
-'l4_dst_port',
 'IPV4_DST_ADDR',
-'IPV4_SRC_ADDR']
+'IPV4_SRC_ADDR',
+'L7_PROTO_NAME']
 
 for i in range(len(descartar)):
     descartar[i] = descartar[i].upper()
 
 descartar.append('Unnamed: 0')
-descartar.append('Unnamed: 0.1')
 
 df = pd.read_csv('dataframe_spl.csv')
-
-print(df['L7_PROTO_NAME'].unique())
 
 '''corr_df = df.corr(method='pearson')
 print(corr_df)
@@ -61,18 +47,16 @@ plt.show()'''
 #print(df.head())
 df = df.drop(descartar, axis=1)
 
-df.loc[df['LABEL'] == 'Normal flow', 'LABEL'] = 0
-df.loc[df['LABEL'] == 'SYN Scan - aggressive', 'LABEL'] = 1
-df.loc[df['LABEL'] == 'Denial of Service R-U-Dead-Yet', 'LABEL'] = 1
-df.loc[df['LABEL'] == 'NULL Scan', 'LABEL'] = 1
-df.loc[df['LABEL'] == 'UDP Scan', 'LABEL'] = 1
+df = df[df['PROTOCOL_MAP'] != 'ipv6-icmp']
 
-df.loc[df['PROTOCOL_MAP'] == 'tcp', 'PROTOCOL_MAP'] = 1
-df.loc[df['PROTOCOL_MAP'] == 'udp', 'PROTOCOL_MAP'] = 2
-df.loc[df['PROTOCOL_MAP'] == 'icmp', 'PROTOCOL_MAP'] = 3
-df.loc[df['PROTOCOL_MAP'] == 'gre', 'PROTOCOL_MAP'] = 4
+
+df.loc[df['PROTOCOL_MAP'] == 'tcp', 'PROTOCOL_MAP'] = 0
+df.loc[df['PROTOCOL_MAP'] == 'udp', 'PROTOCOL_MAP'] = 1
+df.loc[df['PROTOCOL_MAP'] == 'icmp', 'PROTOCOL_MAP'] = 1
+df.loc[df['PROTOCOL_MAP'] == 'gre', 'PROTOCOL_MAP'] = 1
 
 print(df['PROTOCOL_MAP'].unique())
+
 
 byts = df['DST_TO_SRC_SECOND_BYTES'].to_list()
 byts2 = df['SRC_TO_DST_SECOND_BYTES'].to_list()

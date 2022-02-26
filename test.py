@@ -13,19 +13,25 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 
 df = pd.read_csv('dataframe_spl.csv')
-df = df.drop(['Unnamed: 0', 'Unnamed: 0.1'], axis=1)
+df = df.drop(['Unnamed: 0'], axis=1)
 
 
-c = 0
-for i in df:
-    if c > 46:
-        print(df[df['LABEL'] == 'SYN Scan - aggressive'][i].head(20))
-        print(df[df['LABEL'] == 'Denial of Service R-U-Dead-Yet'][i].head(20))
-        print(df[df['LABEL'] == 'NULL Scan'][i].head(20))
-        print(df[df['LABEL'] == 'UDP Scan'][i].head(20))
-        print(df[df['LABEL'] == 'Normal flow'][i].head(20))
-        print('\n\n')
-        c += 1
+'''for i in df:
+    print(df[df['LABEL'] == 'Normal flow'][i].head(20))
+    print(df[df['LABEL'] == 'SYN Scan - aggressive'][i].head(20))
+    print(df[df['LABEL'] == 'Denial of Service R-U-Dead-Yet'][i].head(20))
+    print(df[df['LABEL'] == 'Denial of Service Slowloris'][i].head(20))
+    print('\n\n')'''
+
+
+
+for i in df['DST_TO_SRC_SECOND_BYTES']:
+    count = 0
+    for j in i:
+        if j == ',':
+            count += 1
     
-    else:
-        c += 1
+    if count > 1:
+        print(i)
+
+
