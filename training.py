@@ -7,6 +7,7 @@ from gensim.parsing.preprocessing import remove_stopwords
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics, model_selection
 from sklearn import tree
+import time
 
 
 df = pd.read_csv('df_prep.csv')
@@ -23,17 +24,22 @@ final_features.drop('Unnamed: 0')
 
 print('Final features: ', final_features)
 
+
 feature_matrix_train, feature_matrix_test, target_train, target_test = model_selection.train_test_split(features, target, test_size=0.30, random_state=32)
 
 
 clf = tree.DecisionTreeClassifier()
+train_time = time.time()
 clf = clf.fit(feature_matrix_train, target_train)
+print('El modelo se tardo en fit: ', time.time() - train_time)
 
-clf_pkl_model = open('model_desicion_tree.pkl', 'wb')
+'''clf_pkl_model = open('model_desicion_tree.pkl', 'wb')
 pickle.dump(clf, clf_pkl_model)
-clf_pkl_model.close()
+clf_pkl_model.close()'''
 
+pred_time = time.time()
 target_pred = clf.predict(feature_matrix_test)
+print('El modleo se tardo en predecir: ', time.time() - pred_time)
 
 
 print(metrics.accuracy_score(target_test, target_pred))

@@ -16,10 +16,10 @@ print('holisinicial')
 ds1 = pd.read_csv('dataset-part1.csv')
 ds2 = pd.read_csv('dataset-part2.csv')
 
-print(ds1.LABEL.value_counts())
-print(ds2.LABEL.value_counts())
+print(ds1.LABEL.value_counts(), len(ds1))
+print(ds2.LABEL.value_counts(), len(ds2))
 
-
+print(len(ds1.columns))
 
 df_agg1 = ds1[ds1['LABEL'] == 'SYN Scan - aggressive'].head(800000)
 df_agg2 = ds2[ds2['LABEL'] == 'Denial of Service R-U-Dead-Yet'].head(800000)
